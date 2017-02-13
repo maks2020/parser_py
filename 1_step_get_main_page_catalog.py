@@ -6,6 +6,8 @@ import sys
 import django
 import pickle
 from parser_01s.utils import file_make_dict
+from parser_01s.utils import pickle_bin_file
+
 
 # # url_catalog = '/catalog/muzhchinam/odezhda_1/svitery_dzhempery/'
 # url_catalog = '/catalog/muzhchinam/odezhda_1/palto/'
@@ -41,38 +43,29 @@ from parser_01s.utils import file_make_dict
 #   pickle.dump(name_file, output_file)
 
 config_parse = {}
-config_parse['url_site'] = 'http://www.agat77.ru'
-config_parse['url_first'] = 'http://www.agat77.ru/catalog/figurki/'
-config_parse['url_last_elem01'] = '?&PAGEN_1='
-config_parse['url_last_elem02'] = '&AJAX_PAGE=Y'
-config_parse['page_num'] = 8
-config_parse['name_html'] = config_parse['url_first'].split('/')[-2]
+# url_site = config_parse['url_site'] = 'http://www.agat77.ru'
+# url_first = config_parse['url_first'] = 'http://www.agat77.ru/catalog/figurki/'
+# url_last_elem01 = config_parse['url_last_elem01'] = '?&PAGEN_1='
+# url_last_elem02 = config_parse['url_last_elem02'] = '&AJAX_PAGE=Y'
+# page_num = config_parse['page_num'] = 8
+# name_html = config_parse['name_html'] = config_parse['url_first'].split('/')[-2]
+url_site = config_parse['url_site'] = 'http://kotmarkot.ru'
+url_first = config_parse['url_first'] = 'http://http://kotmarkot.ru/catalog/'
+url_last_elem01 = config_parse['url_last_elem01'] = ''
+url_last_elem02 = config_parse['url_last_elem02'] = ''
+page_num = config_parse['page_num'] = 21
+# name_html = config_parse['name_html'] = config_parse['url_first'].split('/')[3]
+name_html = config_parse['name_html'] = 'kotmorkot'
 print(config_parse['name_html'])
-config_parse['catalog_results'] = './result/' + \
-    '%s/input/' % config_parse['name_html']
-config_parse['name_output_file'] = config_parse[
-    'catalog_results'] + 'html_%s.txt' % config_parse['name_html']
-
-
-try:
-    os.makedirs(config_parse['catalog_results'], mode=0o777, exist_ok=False)
-except:
-    ...
-
-# with open(name_data_file, 'wb') as output_file:
-#     pickle.dump(config_parse['url_site'], output_file)
-#     pickle.dump(name_file, output_file)
+catalog_results = config_parse['catalog_results'] = ('./result/' + '%s/' % name_html)
+name_input_file = config_parse['name_input_file'] = (catalog_results + 'input/')
+name_output_file = config_parse['name_output_file'] = (catalog_results + 'output/')
+name_data_file = config_parse['name_data_file'] = catalog_results + 'config_%s.pickle' % name_html
 
 
 def url_list_make(url_first, url_last_elem01, url_last_elem02, num_pages):
     """make list of url pages"""
-    # urls_list = []  # define list for list urls
-    # for num_page in range(1, num_pages + 1):  # make list urls for scraped
-    # num_page = 0
-    # url_str =
-    # urls_list.append(url_full)  # append url page in list
-    urls_list = ['%s%s%s%s' % (config_parse['url_first'], config_parse['url_last_elem01'],
-                               str(num_page), config_parse['url_last_elem02'])
+    urls_list = ['%s%s%s%s' % (url_first, url_last_elem01, str(num_page), url_last_elem02)
                  for num_page in range(1, num_pages + 1)]
     return urls_list
 
@@ -94,18 +87,30 @@ def get_html_page(urls_list):
 
 
 def add_url_html_bd(dict_url_html):
-    """add data in basedata"""
+    """add data in data base"""
     for key in dict_url_html:
         data_insert = Request_HTML(
             url_html=str(key), source_html=str(dict_url_html[key]))
         data_insert.save()
 
-sources_html = get_html_page(url_list_make(config_parse['url_first'], config_parse['url_last_elem01'],
-                                           config_parse['url_last_elem02'], config_parse['page_num']))
+
+try:
+    os.makedirs(name_input_file, mode=0o777, exist_ok=False)
+except:
+    ...
+
+try:
+    os.makedirs(name_output_file, mode=0o777, exist_ok=False)
+except:
+    ...
+
+sources_html = get_html_page(url_list_make(url_first, url_last_elem01,
+                                           url_last_elem02, page_num))
 # make outpat file with html source
-file_make_dict(sources_html, config_parse['name_output_file'])
+file_make_dict(sources_html, name_input_file)
+pickle_bin_file(name_data_file, 'dump', config_parse)
 print(
-    ('Done process get html from internet. See new file - html_%s.txt' % config_parse['name_html']))
+    ('Done process get html from internet. See new file - html_%s.txt' % name_html))
 
 
 # if __name__ == '__main__':
