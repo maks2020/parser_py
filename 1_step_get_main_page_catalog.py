@@ -41,12 +41,13 @@ from parser_01s.utils import file_make_dict
 #   pickle.dump(name_file, output_file)
 
 config_parse = {}
-config_parse['url_site'] = 'http://www.agat77.ru'
-config_parse['url_first'] = 'http://www.agat77.ru/catalog/figurki/'
-config_parse['url_last_elem01'] = '?&PAGEN_1='
-config_parse['url_last_elem02'] = '&AJAX_PAGE=Y'
-config_parse['page_num'] = 8
-config_parse['name_html'] = config_parse['url_first'].split('/')[-2]
+url_site = config_parse['url_site'] = 'http://kotmarkot.ru'
+url_first = config_parse['url_first'] = 'http://kotmarkot.ru/catalog/'
+url_last_elem01 = config_parse['url_last_elem01'] = ''
+url_last_elem02 = config_parse['url_last_elem02'] = ''
+page_num = config_parse['page_num'] = 21
+# name_html = config_parse['name_html'] = config_parse['url_first'].split('/')[3]
+name_html = config_parse['name_html'] = 'kotmorkot'
 print(config_parse['name_html'])
 config_parse['catalog_results'] = './result/' + \
     '%s/input/' % config_parse['name_html']
@@ -82,9 +83,11 @@ def get_html_page(urls_list):
     source_html = []
     url_html = []
     source_html_dict = []
+    # path_geckodriver='/Users/mas/Desktop/my_python/py3x/parser01/env/bin/'
+    PHANTOMJS_PATH = './phantomjs'
     for url_full in urls_list:
         print(url_full)
-        PHANTOMJS_PATH = './phantomjs'
+        # browser = webdriver.Firefox(path_geckodriver)
         browser = webdriver.PhantomJS(PHANTOMJS_PATH)
         browser.get(url_full)
         source_html.append(browser.page_source)
