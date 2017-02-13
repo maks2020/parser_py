@@ -1,0 +1,15 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+env/
+input/
+output/
+result/
+db.sqlite3
+*.har
+*.json
+*.log
+*.txt
+phantomjs
