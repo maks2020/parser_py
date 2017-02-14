@@ -1,9 +1,13 @@
 from bs4 import BeautifulSoup
 import re
+import pickle
 
 from parser_01s.utils import pickle_bin_file
 
-config_parse = pickle_bin_file('./result/kotmorkot/config_kotmorkot.pickle', 'load')
+config_parse = {}
+with open('./result/kotmorkot_test/config_kotmorkot_test.pickle', 'rb') as input_file:
+    config_parse = pickle.load(input_file)
+
 url_site = config_parse['url_site']
 url_first = config_parse['url_first']
 name_html = config_parse['name_html']
@@ -35,5 +39,3 @@ with open(cat_file_html) as input_data:
         for item in url_things_list:
             output_file.write(item + ' ' + '\n')
             count += 1
-
-pickle_bin_file(name_data_file, 'dump', config_parse)

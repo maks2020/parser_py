@@ -6,6 +6,7 @@ import sys
 import django
 from parser_01s.utils import file_make_dict
 from parser_01s.utils import pickle_bin_file
+import pickle
 
 
 # # url_catalog = '/catalog/muzhchinam/odezhda_1/svitery_dzhempery/'
@@ -47,7 +48,7 @@ url_first = config_parse['url_first'] = 'http://kotmarkot.ru/catalog/'
 url_last_elem01 = config_parse['url_last_elem01'] = '1?page'
 url_last_elem02 = config_parse['url_last_elem02'] = ''
 page_num = config_parse['page_num'] = 19
-name_html = config_parse['name_html'] = 'kotmorkot'
+name_html = config_parse['name_html'] = 'kotmorkot_test'
 catalog_results = config_parse['catalog_results'] = ('./result/' + '%s/' % name_html)
 path_input_file = config_parse['name_input_file'] = (catalog_results + 'input/')
 cat_file_html = config_parse['cat_file_html'] = path_input_file + 'html_%s_catalog.parse' % name_html
@@ -97,11 +98,17 @@ try:
 except:
     ...
 
-sources_html = get_html_page(url_list_make(url_first, url_last_elem01,
-                                           url_last_elem02, page_num))
+# sources_html = get_html_page(url_list_make(url_first, url_last_elem01,
+                                           # url_last_elem02, page_num))
 # make outpat file with html source
-file_make_dict(sources_html, cat_file_html)
-pickle_bin_file(name_data_file, 'dump', config_parse)
+# file_make_dict(sources_html, cat_file_html)
+# pickle_bin_file(name_data_file, 'dump', config_parse)
+with open(name_data_file, 'wb') as output_file:
+    pickle.dump(config_parse, output_file)
+with open(name_data_file, 'rb') as input_file:
+    print(pickle.load(input_file))
+print(name_data_file)
+
 print(
     ('Done process get html from internet. See new file - html_%s.txt' % name_html))
 
