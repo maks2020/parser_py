@@ -9,7 +9,7 @@ from parser_01s.utils import get_html_make_file
 from parser_01s.utils import read_file_in_list
 
 config_parse = {}
-with open('./result/kotmorkot_girl/config_kotmorkot_girl.pickle', 'rb') as input_file:
+with open('./result/kotmarkot_boys/config_kotmarkot_boys.pickle', 'rb') as input_file:
     config_parse = pickle.load(input_file)
 
 name_html = config_parse['name_html']

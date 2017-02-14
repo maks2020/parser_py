@@ -3,7 +3,7 @@ import re
 import pickle
 
 config_parse = {}
-with open('./result/kotmorkot_girl/config_kotmorkot_girl.pickle', 'rb') as input_file:
+with open('./result/kotmarkot_boys/config_kotmarkot_boys.pickle', 'rb') as input_file:
     config_parse = pickle.load(input_file)
 
 num_file_parse = 1

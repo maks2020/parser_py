@@ -44,12 +44,12 @@ from parser_01s.utils import file_make_dict
 #   pickle.dump(name_file, output_file)
 
 config_parse = {}
-url_site = config_parse['url_site'] = 'http://kotmarkot.ru'
-url_first = config_parse['url_first'] = 'http://kotmarkot.ru/catalog/'
-url_last_elem01 = config_parse['url_last_elem01'] = '11?page'
+url_site = config_parse['url_site'] = input("Input url site aka http://example.com: ")
+url_first = config_parse['url_first'] = input('Input url first page catalog aka http://example.com/catalog/: ')
+url_last_elem01 = config_parse['url_last_elem01'] = input('Input element url aka 11?page= : ') 
 url_last_elem02 = config_parse['url_last_elem02'] = ''
-page_num = config_parse['page_num'] = 2
-name_html = config_parse['name_html'] = 'kotmorkot_girl'
+page_num = config_parse['page_num'] = input('Input page count: ')
+name_html = config_parse['name_html'] = input('Input name parse: ')
 catalog_results = config_parse['catalog_results'] = ('./result/' + '%s/' % name_html)
 path_input_file = config_parse['name_input_file'] = (catalog_results + 'input/')
 cat_file_html = config_parse['cat_file_html'] = path_input_file + 'html_%s_catalog.parse' % name_html
@@ -60,8 +60,8 @@ name_data_file = config_parse['name_data_file'] = catalog_results + 'config_%s.p
 def url_list_make(url_first, url_last_elem01, url_last_elem02, num_pages):
     """make list of url catalog pages"""
     urls_list = ['%s%s%s%s' % (url_first, url_last_elem01, str(num_page), url_last_elem02)
-                 for num_page in range(1, num_pages + 1)]
-    urls_list.append('http://kotmarkot.ru/catalog/11')
+                 for num_page in range(1, int(num_pages) + 1)]
+    urls_list.append('http://kotmarkot.ru/catalog/20')
     return urls_list
 
 
