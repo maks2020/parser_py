@@ -1,9 +1,11 @@
 from bs4 import BeautifulSoup
 import re
+import pickle
 
-from parser_01s.utils import pickle_bin_file
+config_parse = {}
+with open('./result/kotmorkot_girl/config_kotmorkot_girl.pickle', 'rb') as input_file:
+    config_parse = pickle.load(input_file)
 
-config_parse = pickle_bin_file('./result/kotmorkot/config_kotmorkot.pickle', 'load')
 num_file_parse = 1
 path_output = config_parse['path_output_file']
 name_html = config_parse['name_html']

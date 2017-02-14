@@ -12,19 +12,24 @@ def get_html_make_file(urls_list, file_name, index_item=0):
         slice_urls_list = urls_list[index_item:]
         buffer_list = []
         for url_full in slice_urls_list:
-            if count == 11:
-                count = 1
-                print("Process write from buffer...")
-                for item in buffer_list:
-                    output_file.write(str(item) + ';;;;;;;;;;;;;;;;;;;;')
-                buffer_list = []
-                print("End write")
             print(str(index_item + 1), ' ', url_full.rstrip())
             PHANTOMJS_PATH = './phantomjs'
             # browser = webdriver.Firefox(path_geckodriver)
             browser = webdriver.PhantomJS(PHANTOMJS_PATH)
             browser.get(url_full)
             buffer_list.append(browser.page_source)
+            if count == 10:
+                count = 1
+                print("Process write from buffer...")
+                for item in buffer_list:
+                    output_file.write(str(item) + ';;;;;;;;;;;;;;;;;;;;')
+                buffer_list = []
+                print("End write")
+            if slice_urls_list.index(url_full) == (len(slice_urls_list) - 1):
+                print("End urls. Process write from buffer...")
+                for item in buffer_list:
+                    output_file.write(str(item) + ';;;;;;;;;;;;;;;;;;;;')
+                print('End write')
             count += 1
             index_item += 1
 

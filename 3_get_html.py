@@ -1,16 +1,17 @@
 import os
 import re
+import pickle
+
 from bs4 import BeautifulSoup
 from selenium import webdriver
 
 from parser_01s.utils import get_html_make_file
 from parser_01s.utils import read_file_in_list
-from parser_01s.utils import pickle_bin_file
 
-config_parse = pickle_bin_file('./result/kotmorkot/config_kotmorkot.pickle', 'load')
+config_parse = {}
+with open('./result/kotmorkot_girl/config_kotmorkot_girl.pickle', 'rb') as input_file:
+    config_parse = pickle.load(input_file)
 
-
-config_parse = pickle_bin_file('./result/kotmorkot/config_kotmorkot.pickle', 'load')
 name_html = config_parse['name_html']
 catalog_results = config_parse['catalog_results']
 path_html_url = config_parse['path_things_url_file']
