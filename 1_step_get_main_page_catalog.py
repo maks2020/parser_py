@@ -4,7 +4,6 @@ from selenium import webdriver
 import os
 import sys
 import django
-import pickle
 from parser_01s.utils import file_make_dict
 from parser_01s.utils import pickle_bin_file
 
@@ -43,30 +42,24 @@ from parser_01s.utils import pickle_bin_file
 #   pickle.dump(name_file, output_file)
 
 config_parse = {}
-# url_site = config_parse['url_site'] = 'http://www.agat77.ru'
-# url_first = config_parse['url_first'] = 'http://www.agat77.ru/catalog/figurki/'
-# url_last_elem01 = config_parse['url_last_elem01'] = '?&PAGEN_1='
-# url_last_elem02 = config_parse['url_last_elem02'] = '&AJAX_PAGE=Y'
-# page_num = config_parse['page_num'] = 8
-# name_html = config_parse['name_html'] = config_parse['url_first'].split('/')[-2]
 url_site = config_parse['url_site'] = 'http://kotmarkot.ru'
-url_first = config_parse['url_first'] = 'http://http://kotmarkot.ru/catalog/'
-url_last_elem01 = config_parse['url_last_elem01'] = ''
+url_first = config_parse['url_first'] = 'http://kotmarkot.ru/catalog/'
+url_last_elem01 = config_parse['url_last_elem01'] = '1?page'
 url_last_elem02 = config_parse['url_last_elem02'] = ''
-page_num = config_parse['page_num'] = 21
-# name_html = config_parse['name_html'] = config_parse['url_first'].split('/')[3]
+page_num = config_parse['page_num'] = 19
 name_html = config_parse['name_html'] = 'kotmorkot'
-print(config_parse['name_html'])
 catalog_results = config_parse['catalog_results'] = ('./result/' + '%s/' % name_html)
-name_input_file = config_parse['name_input_file'] = (catalog_results + 'input/')
-name_output_file = config_parse['name_output_file'] = (catalog_results + 'output/')
+path_input_file = config_parse['name_input_file'] = (catalog_results + 'input/')
+cat_file_html = config_parse['cat_file_html'] = path_input_file + 'html_%s_catalog.parse' % name_html
+path_output_file = config_parse['path_output_file'] = (catalog_results + 'output/')
 name_data_file = config_parse['name_data_file'] = catalog_results + 'config_%s.pickle' % name_html
 
 
 def url_list_make(url_first, url_last_elem01, url_last_elem02, num_pages):
-    """make list of url pages"""
+    """make list of url catalog pages"""
     urls_list = ['%s%s%s%s' % (url_first, url_last_elem01, str(num_page), url_last_elem02)
                  for num_page in range(1, num_pages + 1)]
+    urls_list.append('http://kotmarkot.ru/catalog/1')
     return urls_list
 
 
@@ -95,19 +88,19 @@ def add_url_html_bd(dict_url_html):
 
 
 try:
-    os.makedirs(name_input_file, mode=0o777, exist_ok=False)
+    os.makedirs(path_input_file, mode=0o777, exist_ok=False)
 except:
     ...
 
 try:
-    os.makedirs(name_output_file, mode=0o777, exist_ok=False)
+    os.makedirs(path_output_file, mode=0o777, exist_ok=False)
 except:
     ...
 
 sources_html = get_html_page(url_list_make(url_first, url_last_elem01,
                                            url_last_elem02, page_num))
 # make outpat file with html source
-file_make_dict(sources_html, name_input_file)
+file_make_dict(sources_html, cat_file_html)
 pickle_bin_file(name_data_file, 'dump', config_parse)
 print(
     ('Done process get html from internet. See new file - html_%s.txt' % name_html))

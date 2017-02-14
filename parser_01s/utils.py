@@ -2,6 +2,7 @@ import codecs
 import timeit
 from bs4 import BeautifulSoup
 from selenium import webdriver
+import pickle
 
 
 def get_html_make_file(urls_list, file_name, index_item=0):
@@ -49,10 +50,10 @@ def file_make_dict(data, path_file):
 def pickle_bin_file(name_bin_file, kind_of_work, name_data=''):
     """dump or load binary data file""" 
     if kind_of_work is 'dump':
-        with open(name_data_file, 'wb') as output_file:
+        with open(name_bin_file, 'wb') as output_file:
             pickle.dump(name_data, output_file)
     elif kind_of_work is 'load':
-        with open(name_data_file):
-            return pickle.load(name_data_file)
+        with open(name_bin_file, 'rb') as input_file:
+            return pickle.load(input_file)
     else:
         print('Not the right variable "kind_of_work"')
