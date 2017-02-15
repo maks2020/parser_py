@@ -1,0 +1,12 @@
+3to2==1.1.1
+beautifulsoup4==4.5.3
+browsermob-proxy==0.7.1
+Django==1.10.5
+idna==2.2
+lxml==3.7.2
+PyInstaller==3.2.1
+requests==2.12.5
+requests-file==1.4.1
+selenium==3.0.2
+six==1.10.0
+tldextract==2.0.2
