@@ -2,17 +2,7 @@ from bs4 import BeautifulSoup
 import re
 import pickle
 
-config_parse = {}
-with open('./result/kotmarkot_boys/config_kotmarkot_boys.pickle', 'rb') as input_file:
-    config_parse = pickle.load(input_file)
-url_site = config_parse['url_site']
-url_first = config_parse['url_first']
-name_html = config_parse['name_html']
-catalog_results = config_parse['catalog_results']
-cat_file_html = config_parse['cat_file_html']
-path_things_url_file = config_parse['path_things_url_file'] = config_parse['path_output_file'] + 'thing_url_' + name_html + '.txt'
-name_data_file = config_parse['name_data_file']
-
+from parser_01s.utils import read_config
 
 def make_url_things_list(sources_html):
     soup = BeautifulSoup(sources_html, "lxml")
@@ -28,6 +18,16 @@ def make_url_things_list(sources_html):
             pass
     return url_things_list
 
+config_parse = {}
+config_parse = read_config()
+
+url_site = config_parse['url_site']
+url_first = config_parse['url_first']
+name_html = config_parse['name_html']
+catalog_results = config_parse['catalog_results']
+cat_file_html = config_parse['cat_file_html']
+path_things_url_file = config_parse['path_things_url_file'] = config_parse['path_output_file'] + 'thing_url_' + name_html + '.txt'
+name_data_file = config_parse['name_data_file']
 
 with open(cat_file_html) as input_data:
     url_things_list = make_url_things_list(str(input_data.readlines()))

@@ -2,6 +2,7 @@ import codecs
 import timeit
 from bs4 import BeautifulSoup
 from selenium import webdriver
+import pickle
 
 
 def get_html_make_file(urls_list, file_name, index_item=0):
@@ -50,4 +51,12 @@ def file_make_dict(data, path_file):
         for item in data:
             output_file.write(data[item])
 
+def read_config():
+    """try and read exist config file"""
+
+    name_html = input('Input name project: ')
+    name_data_file  = './result/%s/config_%s.pickle' % (name_html, name_html)
+    config_parse = {}
+    with open(name_data_file, 'rb') as input_file:
+        return pickle.load(input_file)
 

@@ -7,10 +7,11 @@ from selenium import webdriver
 
 from parser_01s.utils import get_html_make_file
 from parser_01s.utils import read_file_in_list
+from parser_01s.utils import read_config
+
 
 config_parse = {}
-with open('./result/kotmarkot_boys/config_kotmarkot_boys.pickle', 'rb') as input_file:
-    config_parse = pickle.load(input_file)
+config_parse = read_config()
 
 name_html = config_parse['name_html']
 catalog_results = config_parse['catalog_results']

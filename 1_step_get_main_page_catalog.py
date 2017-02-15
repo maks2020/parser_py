@@ -8,55 +8,6 @@ import pickle
 
 from parser_01s.utils import file_make_dict
 
-
-
-# # url_catalog = '/catalog/muzhchinam/odezhda_1/svitery_dzhempery/'
-# url_catalog = '/catalog/muzhchinam/odezhda_1/palto/'
-# url_full = config_parse['url_site'] + url_catalog
-# PHANTOMJS_PATH = './phantomjs'
-# browser = webdriver.PhantomJS(PHANTOMJS_PATH)
-# browser.get(url_full)
-# source_html = browser.page_source
-# soup = BeautifulSoup(source_html, "lxml")
-# things_list = soup.find_all('a', ['class': 'text_fader'])
-# url_things_list = []
-# for thing in things_list:
-#   url_thing = config_parse['url_site'] + thing.get('href')
-#   url_things_list.append(url_thing)
-# sources_html_list = []
-# for url in url_things_list:
-#   browser.get(url)
-#   sources_html_list.append(browser.page_source)
-# with open('sources_html_list02.pickle', 'wb') as output_file:
-#   pickle.dump(sources_html_list, output_file)
-
-# work version
-# config_parse['url_site'] = input('Введите адрес сайта: ')
-# config_parse['url_first'] = input('Вставьте адрес первой страницы каталога: ')
-# url_last = input('Вставьте адрес последней страницы каталога: ')
-# count_page = input('Сколько страниц нужно обойти: ')
-# name_file = input('На выходе вы получите файл csv. Введите желаемое имя файла без расширения: ')
-# print('Process...')
-# name_file_input = name_file + '.pickle'
-# name_data_file = name_file + '.data'
-# with open(name_data_file, 'wb') as output_file:
-#   pickle.dump(config_parse['url_site'], output_file)
-#   pickle.dump(name_file, output_file)
-
-config_parse = {}
-url_site = config_parse['url_site'] = input("Input url site aka http://example.com: ")
-url_first = config_parse['url_first'] = input('Input url first page catalog aka http://example.com/catalog/: ')
-url_last_elem01 = config_parse['url_last_elem01'] = input('Input element url aka 11?page= : ') 
-url_last_elem02 = config_parse['url_last_elem02'] = ''
-page_num = config_parse['page_num'] = input('Input page count: ')
-name_html = config_parse['name_html'] = input('Input name parse: ')
-catalog_results = config_parse['catalog_results'] = ('./result/' + '%s/' % name_html)
-path_input_file = config_parse['name_input_file'] = (catalog_results + 'input/')
-cat_file_html = config_parse['cat_file_html'] = path_input_file + 'html_%s_catalog.parse' % name_html
-path_output_file = config_parse['path_output_file'] = (catalog_results + 'output/')
-name_data_file = config_parse['name_data_file'] = catalog_results + 'config_%s.pickle' % name_html
-
-
 def url_list_make(url_first, url_last_elem01, url_last_elem02, num_pages):
     """make list of url catalog pages"""
     urls_list = ['%s%s%s%s' % (url_first, url_last_elem01, str(num_page), url_last_elem02)
@@ -90,6 +41,18 @@ def add_url_html_bd(dict_url_html):
             url_html=str(key), source_html=str(dict_url_html[key]))
         data_insert.save()
 
+config_parse = {}
+name_html = config_parse['name_html'] = input('Input name project: ')
+url_site = config_parse['url_site'] = input("Input url site aka http://example.com: ")
+url_first = config_parse['url_first'] = input('Input url first page catalog aka http://example.com/catalog/: ')
+url_last_elem01 = config_parse['url_last_elem01'] = input('Input element url aka 11?page= : ') 
+url_last_elem02 = config_parse['url_last_elem02'] = ''
+page_num = config_parse['page_num'] = input('Input page count: ')
+catalog_results = config_parse['catalog_results'] = ('./result/' + '%s/' % name_html)
+path_input_file = config_parse['name_input_file'] = (catalog_results + 'input/')
+cat_file_html = config_parse['cat_file_html'] = path_input_file + 'html_%s_catalog.parse' % name_html
+path_output_file = config_parse['path_output_file'] = (catalog_results + 'output/')
+name_data_file = config_parse['name_data_file'] = catalog_results + 'config_%s.pickle' % name_html
 
 try:
     os.makedirs(path_input_file, mode=0o777, exist_ok=False)
