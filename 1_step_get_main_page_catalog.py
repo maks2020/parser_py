@@ -35,9 +35,10 @@ def get_html_page(urls_list, url_login_page):
     login_user = browser.find_element_by_id('USER_LOGIN')
     passwd_user = browser.find_element_by_id('USER_PASSWORD')
     submit_b = browser.find_element_by_id('Login')
-    #input and send login and password
+    #input login and password
     login_value = input('Input login for site: ')
     passwd_value = getpass.getpass('Input password for site: ')
+    #and send...
     login_user.send_keys(login_value)
     passwd_user.send_keys(passwd_value)
     #click on button submit
