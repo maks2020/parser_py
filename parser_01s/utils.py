@@ -3,6 +3,7 @@ import timeit
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import pickle
+import getpass
 
 
 def get_html_make_file(urls_list, file_name, index_item=0):
@@ -17,6 +18,54 @@ def get_html_make_file(urls_list, file_name, index_item=0):
             PHANTOMJS_PATH = './phantomjs'
             # browser = webdriver.Firefox(path_geckodriver)
             browser = webdriver.PhantomJS(PHANTOMJS_PATH)
+            browser.get(url_full)
+            buffer_list.append(browser.page_source)
+            if count == 10:
+                count = 1
+                print("Process write from buffer...")
+                for item in buffer_list:
+                    output_file.write(str(item) + ';;;;;;;;;;;;;;;;;;;;')
+                buffer_list = []
+                print("End write")
+            if slice_urls_list.index(url_full) == (len(slice_urls_list) - 1):
+                print("End urls. Process write from buffer...")
+                for item in buffer_list:
+                    output_file.write(str(item) + ';;;;;;;;;;;;;;;;;;;;')
+                print('End write')
+            count += 1
+            index_item += 1
+
+
+def get_html_with_login(urls_list, file_name, url_login_page, index_item=0):
+    """get html code from source and make output file with login"""
+    # path_geckodriver='/Users/mas/Desktop/my_python/py3x/parser01/env/bin'
+    with open(file_name, 'w') as output_file:
+        count = 1
+        slice_urls_list = urls_list[index_item:]
+        buffer_list = []
+        # path_geckodriver='/Users/mas/Desktop/my_python/py3x/parser01/env/bin/'
+        PHANTOMJS_PATH = './phantomjs'
+        # browser = webdriver.Firefox(path_geckodriver)
+        browser = webdriver.PhantomJS(PHANTOMJS_PATH)
+        #get page with login and password input
+        browser.get(url_login_page)
+        #search form input login, password, button input
+        login_user = browser.find_element_by_id('USER_LOGIN')
+        passwd_user = browser.find_element_by_id('USER_PASSWORD')
+        submit_b = browser.find_element_by_id('Login')
+        #input and send login and password
+        login_value = input('Input login for site: ')
+        passwd_value = getpass.getpass('Input password for site: ')
+        login_user.send_keys(login_value)
+        passwd_user.send_keys(passwd_value)
+        #click on button submit
+        submit_b.click()
+        #get html pages code on list url
+        for url_full in slice_urls_list:
+            print(str(index_item + 1), ' ', url_full.rstrip())
+            # PHANTOMJS_PATH = './phantomjs'
+            # # browser = webdriver.Firefox(path_geckodriver)
+            # browser = webdriver.PhantomJS(PHANTOMJS_PATH)
             browser.get(url_full)
             buffer_list.append(browser.page_source)
             if count == 10:
