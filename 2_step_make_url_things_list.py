@@ -7,10 +7,9 @@ from parser_01s.utils import read_config
 def make_url_things_list(sources_html):
     soup = BeautifulSoup(sources_html, "lxml")
     # things_list = soup.find_all('a', class_='catalog-list-title')
-    things_list = soup.select('.images a')
+    #things_list = soup.select('.images a') - kotmarkot
+    things_list = soup.select('.section_good_image a')
     url_things_list = []
-    # url_things_list = [(url_site + thing.get('href')) for thing in things_list 
-                        # (url_site + thing.get('href')) not in url_things_list]
     for thing in things_list:
         if (url_site + thing.get('href')) not in url_things_list:
             url_things_list.append((url_site + thing.get('href')))
