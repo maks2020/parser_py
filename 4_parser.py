@@ -30,7 +30,7 @@ with open(path_input_file) as input_file:
         scrp_soup = BeautifulSoup(str(script_item), 'lxml')
         scripts_text.append(scrp_soup.get_text(separator=u"", strip=True))
     #get text data color, size, man's height from content of tag <script> and add it's in the list
-    thing_data_list = []
+    thing_data_list = [] #define list for dict  
     for text in scripts_text:
         regex_str = re.compile(r"arSKU = [{['0-9:А-Яа-я,A-Za-z#{ ._}/?=&-}]+")
         #search path text for regex
