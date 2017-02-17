@@ -2,9 +2,12 @@ from bs4 import BeautifulSoup
 import re
 import pickle
 
+from parser_01s.utils import read_config
+
 config_parse = {}
-with open('./result/kotmarkot_boys/config_kotmarkot_boys.pickle', 'rb') as input_file:
-    config_parse = pickle.load(input_file)
+config_parse = read_config('shilco_womens')
+# with open('./result/kotmarkot_boys/config_kotmarkot_boys.pickle', 'rb') as input_file:
+#     config_parse = pickle.load(input_file)
 
 num_file_parse = 1
 path_output = config_parse['path_output_file']
@@ -18,72 +21,104 @@ with open(path_input_file) as input_file:
     sources_html = input_file.read()
     sources_html_list = sources_html.split(';;;;;;;;;;;;;;;;;;;;')
     count = 1
-    for source in sources_html_list:
-        soup = BeautifulSoup(source, "lxml")
-        imgs_list = soup.select('.imagezoom-thumbs a')
-        imgs_str = []
-        for img in imgs_list:
-            imgs_soup = BeautifulSoup(str(img), "lxml")
-            imgs_str.append(imgs_soup.a['data-zoom-image'])
-        while len(imgs_str) < 10:
-            imgs_str.append('')
-        img_str = ';'.join(imgs_str)
-        thing_props_list = soup.select('.field__item')
-        try:
-            if not thing_props_list[1].find('a'):
-                thing_props_list.insert(1, '<div></div>')
-        except:
-            ...
-        try:
-            if thing_props_list[2].find('a'):
-                thing_props_list.insert(2, '<div></div>')
-        except:
-            ...
-        try:
-            if re.search(r'[0-9]+', str(thing_props_list[8])):
-                thing_props_list.insert(8, '<div></div>')
-        except:
-            ...
-        try:
-            thing_props = BeautifulSoup(str(thing_props_list[-1]), "lxml").get_text()
-            if not (re.match(r'[0-9]+', thing_props)):
-                thing_props_list.insert(9, str(thing_props_list.pop()).strip()) 
-        except:
-            ...
-        # try:
-        #     print(thing_props_list[9])
-        # except:
-        #     ...
+    # for source in sources_html_list:
+    soup = BeautifulSoup(sources_html_list[1], "lxml")
+    scripts_list = soup.find_all('script')
+    #get list contents from tag <script> for every page
+    scripts_text = []
+    for script_item in scripts_list:
+        scrp_soup = BeautifulSoup(str(script_item), 'lxml')
+        scripts_text.append(scrp_soup.get_text(separator=u"", strip=True))
+    #get text data color, size, man's height from content of tag <script> and add it's in the list
+    thing_data_list = []
+    for text in scripts_text:
+        regex_str = re.compile(r"arSKU = [{['0-9:А-Яа-я,A-Za-z#{ ._}/?=&-}]+")
+        #search path text for regex
+        if regex_str.search(text):
+            vals_list = regex_str.search(text).group()[9:-2].replace("{'0':", ";;;;{'0':").split(';;;;')
+            vals_list = vals_list[1:]
+            data_thing_for_color = {}
+            keys_list_temp = []
+            values_list_temp = []
+            #delete symbols "{}'" and elements and split. Build dictionary from lists 
+            for val in vals_list:
+                vars_list = val.replace('{', '').replace('}', '').replace("'", "")[:-1].split(',')
+                vars_list.remove(vars_list[5])
+                for var in vars_list:
+                    var = var.split(':')
+                    keys_list_temp.append(var[0]) #add keys
+                    values_list_temp.append(var[1]) #add values of keys
+                data_thing_for_color = dict(zip(keys_list_temp, values_list_temp))
+                thing_data_list.append(data_thing_for_color)
+    print(thing_data_list[3]['0'], thing_data_list[3]['1'], thing_data_list[3]['2'], end='   ')
 
-        size_thing_list = []
-        for size in thing_props_list[10:]:
-            size_soup = BeautifulSoup(str(size), 'lxml')
-            size_thing_list.append(size_soup.div.get_text())
-        size_thing ='<div>' + ','.join(size_thing_list) + '</div>'
-        thing_props_list[10:] = ''
-        thing_props_list.append(size_thing)
-        print(thing_props_list)
+        # if img.get_text().search(re.compile(r'arSKU')):
+        #     print((img.get_text()))
+
+        # print(imgs_list[14])
+#         imgs_str = []
+#         for img in imgs_list:
+#             imgs_soup = BeautifulSoup(str(img), "lxml")
+#             imgs_str.append(imgs_soup.a['data-zoom-image'])
+#         while len(imgs_str) < 10:
+#             imgs_str.append('')
+#         img_str = ';'.join(imgs_str)
+#         thing_props_list = soup.select('.field__item')
+#         try:
+#             if not thing_props_list[1].find('a'):
+#                 thing_props_list.insert(1, '<div></div>')
+#         except:
+#             ...
+#         try:
+#             if thing_props_list[2].find('a'):
+#                 thing_props_list.insert(2, '<div></div>')
+#         except:
+#             ...
+#         try:
+#             if re.search(r'[0-9]+', str(thing_props_list[8])):
+#                 thing_props_list.insert(8, '<div></div>')
+#         except:
+#             ...
+#         try:
+#             thing_props = BeautifulSoup(str(thing_props_list[-1]), "lxml").get_text()
+#             if not (re.match(r'[0-9]+', thing_props)):
+#                 thing_props_list.insert(9, str(thing_props_list.pop()).strip()) 
+#         except:
+#             ...
+#         # try:
+#         #     print(thing_props_list[9])
+#         # except:
+#         #     ...
+
+#         size_thing_list = []
+#         for size in thing_props_list[10:]:
+#             size_soup = BeautifulSoup(str(size), 'lxml')
+#             size_thing_list.append(size_soup.div.get_text())
+#         size_thing ='<div>' + ','.join(size_thing_list) + '</div>'
+#         thing_props_list[10:] = ''
+#         thing_props_list.append(size_thing)
+#         print(thing_props_list)
 
 
-        prop_str = ''
-        index = 1
-        for prop in thing_props_list:
-            prop_soup = BeautifulSoup(str(prop), "lxml")
-            try:
-                prop_str += prop_soup.div.get_text().strip() + ';'
-            except:
-                print(index, prop)
-            index += 1
-        rows_csv.append((img_str + prop_str))
-with open(path_output_file, 'w') as output_file:
-    # output_file.write(
-    #     'артикул;наименование;описание;цена;размер;img;img;img;img;img;img;img;img;img;img\n')
-    for row in rows_csv:
-        output_file.write(row + '\n')
-    # with open('parser.log', 'a') as output_file:
-    #     output_file.write(source + '\n' * 3 + '=' * 80 + '\n' *3)
-count += 1
+#         prop_str = ''
+#         index = 1
+#         for prop in thing_props_list:
+#             prop_soup = BeautifulSoup(str(prop), "lxml")
+#             try:
+#                 prop_str += prop_soup.div.get_text().strip() + ';'
+#             except:
+#                 print(index, prop)
+#             index += 1
+#         rows_csv.append((img_str + prop_str))
+# with open(path_output_file, 'w') as output_file:
+#     # output_file.write(
+#     #     'артикул;наименование;описание;цена;размер;img;img;img;img;img;img;img;img;img;img\n')
+#     for row in rows_csv:
+#         output_file.write(row + '\n')
+#     # with open('parser.log', 'a') as output_file:
+#     #     output_file.write(source + '\n' * 3 + '=' * 80 + '\n' *3)
+# count += 1
 
-    #     print('Exception in sourse: ' + str(sources_html_list.index(source)))
-    # print('Count: ' + str(count))
+#     #     print('Exception in sourse: ' + str(sources_html_list.index(source)))
+#     # print('Count: ' + str(count))
 
