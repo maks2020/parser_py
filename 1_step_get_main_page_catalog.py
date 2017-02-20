@@ -87,7 +87,15 @@ def project_base(name_project):
         with open('projects_data.pickle', 'rb') as r_file:
             projects_data = pickle.load(r_file)
     if name_project in projects_data:
-        config_parse = read_config(name_project)
+        try:
+            config_parse = read_config(name_project)
+        except FileNotFoundError:
+            with open('projects_data.pickle', 'rb') as r_file:
+                projects_data = pickle.load(r_file)
+                projects_data.remove(name_project)
+            with open('projects_data.pickle', 'wb') as r_file:
+                pickle.dump(projects_data, r_file)
+            print('Start again')
     else:
         #input data for parse
         config_parse['name_html'] = name_project
@@ -97,21 +105,21 @@ def project_base(name_project):
         config_parse['url_last_elem02'] = ''
         config_parse['page_num'] = input('Input page count: ')
         config_parse['url_login'] = input('Input url login page: ')
+        #create path for input/output files
+        config_parse['catalog_results'] = ('./result/' + '%s/' % name_project)
+        config_parse['name_input_file'] = (config_parse['catalog_results'] + 'input/')
+        config_parse['cat_file_html'] = config_parse['name_input_file'] + 'html_%s_catalog.parse' % name_project
+        config_parse['path_output_file'] = (config_parse['catalog_results'] + 'output/')
+        config_parse['name_data_file'] = config_parse['catalog_results'] + 'config_%s.pickle' % name_project
+        #create structure directory
+        create_dir(config_parse['name_input_file'], config_parse['path_output_file'])
         #input name parse in list data project
         projects_data.append(name_project)
         #write in file 
         with open('projects_data.pickle', 'wb') as output_file:
             pickle.dump(projects_data, output_file)
-        #create path for input/output files
-        config_parse['catalog_results'] = ('./result/' + '%s/' % name_html)
-        config_parse['name_input_file'] = (catalog_results + 'input/')
-        config_parse['cat_file_html'] = path_input_file + 'html_%s_catalog.parse' % name_html
-        config_parse['path_output_file'] = (catalog_results + 'output/')
-        config_parse['name_data_file'] = catalog_results + 'config_%s.pickle' % name_html
-        #create structure directory
-        create_dir(path_input_file, path_output_file)
         #write data parser in file
-        with open(name_data_file, 'wb') as output_file:
+        with open(config_parse['name_data_file'], 'wb') as output_file:
             pickle.dump(config_parse, output_file)
     return config_parse
 
@@ -130,8 +138,10 @@ config_parse = {}
 name_project = input('Input name project: ')
 #try is project in base if not add his and new data
 config_parse = project_base(name_project) 
+print(config_parse)
 # name_project = name_html it's bug 
-name_html = config_parse['name_html']
+# name_html = config_parse['name_html']
+
 url_site = config_parse['url_site']
 url_first = config_parse['url_first']
 url_last_elem01 = config_parse['url_last_elem01']
@@ -151,7 +161,7 @@ sources_html = get_html_page(url_list_make(url_first, url_last_elem01,
 file_make_dict(sources_html, cat_file_html)
 #done 
 print(
-    ('Done process get html from internet. See new file - html_%s.txt' % name_html))
+    ('Done process get html from internet. See new file - html_%s.txt' % name_project))
 
 # if __name__ == '__main__':
 #   print ("Starting add data in BD script...")
