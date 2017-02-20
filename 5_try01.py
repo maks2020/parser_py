@@ -46,31 +46,31 @@ num_file_parse = 1
 name_html = config_parse['name_html']
 path_html_url = config_parse['path_things_url_file']
 path_output = config_parse['path_output_file']
-path_parse_file = (path_output + 'html_' +
-                    name_html + '_' + str(num_file_parse) + '.parse')
+# path_parse_file = (path_input + 'html_' +
+                    # name_html + '_' + str(num_file_parse) + '.parse')
 path_output_file = (path_output + 'html_' +
-                    name_html + '_filt_' + str(num_file_parse) + '.parse')
+                    name_html + '_filt_url_' + '.txt')
 
-source_html = []
-with open(path_parse_file, 'r') as input_file:
-    source_html = input_file.read().split(';;;;;;;;;;;;;;;;;;;;')
+# source_html = []
+# with open(path_parse_file, 'r') as input_file:
+#     source_html = input_file.read().split(';;;;;;;;;;;;;;;;;;;;')
 
 things_url_list = []
 with open(path_html_url) as input_source:
     for item in input_source.readlines():
         things_url_list.append(item.rstrip())
 
-dict_url_html = dict(zip(things_url_list, source_html))
+# dict_url_html = dict(zip(things_url_list, source_html))
 key_url = re.compile(r'//[.a-z]+/[a-z]+/[_*a-z]+/[_*a-z0-9]+/')
 
-url_fil
-html_filter = []
-for key in dict_url_html:
-    if key_url.search(key):
-        html_filter.append(dict_url_html[key])
+url_fil = []
+# html_filter = []
+for url in things_url_list:
+    if key_url.search(url):
+        url_fil.append(url)
 
 with open(path_output_file, 'w') as output_file:
-    for item in html_filter:
-        output_file.write(item + ';;;;;;;;;;;;;;;;;;;;')
+    for url in url_fil:
+        output_file.write(url + '\n')
 
 
