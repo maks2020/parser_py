@@ -22,10 +22,11 @@ path_output_file = path_input_file[:-6] + '.csv'  # name file csv
 sources_html_list = []
 with open(path_input_file) as input_file:
     sources_html_list = input_file.read().split(';;;;;;;;;;;;;;;;;;;;')[:-1]
-
+#write csv file
 with open(path_output_file, 'w') as output_file:
     output_file.write(
         'артикул;наименование;описание;цена;размер;img;img;img;img;img;img;img;img;img;img\n')
+    #get rows csv from function-parser
     rows_csv = parse_shilco_sport_v2(sources_html_list, url_site)
     for row in rows_csv:
         output_file.write(row + '\n')
