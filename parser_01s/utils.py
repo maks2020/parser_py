@@ -89,9 +89,9 @@ def read_file_in_list(file_name):
         return input_file.readlines()
 
 
-def write_file_csv(file_name, content_file, method_rec, codec_text):
+def write_file_csv(file_name, rows_csv_list, method_rec, codec_text):
     with codecs.open(file_name, method_rec, codec_text) as output_file:
-        for row in content_file:
+        for row in rows_csv_list:
             output_file.write(row)
 
 def file_make_dict(data, path_file):
@@ -110,4 +110,55 @@ def read_config(name_html_in = ''):
     config_parse = {}
     with open(name_data_file, 'rb') as input_file:
         return pickle.load(input_file)
+
+def get_html_page_auth(urls_list, url_login_page):
+    """get html source from web site"""
+    source_html = []
+    url_html = []
+    source_html_dict = []
+    # path_geckodriver='/Users/mas/Desktop/my_python/py3x/parser01/env/bin/'
+    PHANTOMJS_PATH = './phantomjs'
+    # browser = webdriver.Firefox(path_geckodriver)
+    browser = webdriver.PhantomJS(PHANTOMJS_PATH)
+    #get page with login and password input
+    browser.get(url_login_page)
+    #search form input login, password, button input
+    login_user = browser.find_element_by_id('USER_LOGIN')
+    passwd_user = browser.find_element_by_id('USER_PASSWORD')
+    submit_b = browser.find_element_by_id('Login')
+    #input login and password
+    login_value = input('Input login for site: ')
+    passwd_value = getpass.getpass('Input password for site: ')
+    #and send...
+    login_user.send_keys(login_value)
+    passwd_user.send_keys(passwd_value)
+    #click on button submit
+    submit_b.click()
+    #get html pages code on list url
+    for url_full in urls_list:
+        print(url_full)
+        browser.get(url_full)
+        source_html.append(browser.page_source)
+        url_html.append(url_full)
+        source_html_dict = dict(zip(url_html, source_html))
+    return source_html_dict
+
+
+def get_html_page_wout_auth(urls_list):
+    """get html source from web site"""
+    source_html = []
+    url_html = []
+    source_html_dict = []
+    # path_geckodriver='/Users/mas/Desktop/my_python/py3x/parser01/env/bin/'
+    PHANTOMJS_PATH = './phantomjs'
+    # browser = webdriver.Firefox(path_geckodriver)
+    browser = webdriver.PhantomJS(PHANTOMJS_PATH)
+    #get html pages code on list url
+    for url_full in urls_list:
+        print(url_full)
+        browser.get(url_full)
+        source_html.append(browser.page_source)
+        url_html.append(url_full)
+        source_html_dict = dict(zip(url_html, source_html))
+    return source_html_dict
 
