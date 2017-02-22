@@ -206,3 +206,56 @@ def parse_shilco_sport_v2(sources_html_list, url_site):
             #filling list rows_csv rows csv
             rows_csv.append(row_csv)
     return rows_csv
+
+def parse_kotmarkot(sources_html_list):
+    rows_csv = []
+    for source in sources_html_list:
+        soup = BeautifulSoup(source, "lxml")
+        imgs_list = soup.select('.imagezoom-thumbs a')
+        imgs_str = []
+        for img in imgs_list:
+            imgs_soup = BeautifulSoup(str(img), "lxml")
+            imgs_str.append(imgs_soup.a['data-zoom-image'])
+        while len(imgs_str) < 10:
+            imgs_str.append('')
+        img_str = ';'.join(imgs_str)
+        thing_props_list = soup.select('.field__item')
+        try:
+            if not thing_props_list[1].find('a'):
+                thing_props_list.insert(1, '<div></div>')
+        except:
+            ...
+        try:
+            if thing_props_list[2].find('a'):
+                thing_props_list.insert(2, '<div></div>')
+        except:
+            ...
+        try:
+            if re.search(r'[0-9]+', str(thing_props_list[8])):
+                thing_props_list.insert(8, '<div></div>')
+        except:
+            ...
+        try:
+            thing_props = BeautifulSoup(str(thing_props_list[-1]), "lxml").get_text()
+            if not (re.match(r'[0-9]+', thing_props)):
+                thing_props_list.insert(9, str(thing_props_list.pop()).strip()) 
+        except:
+            ...
+        size_thing_list = []
+        for size in thing_props_list[10:]:
+            size_soup = BeautifulSoup(str(size), 'lxml')
+            size_thing_list.append(size_soup.div.get_text())
+        size_thing ='<div>' + ','.join(size_thing_list) + '</div>'
+        thing_props_list[10:] = ''
+        thing_props_list.append(size_thing)
+        prop_str = ''
+        index = 1
+        for prop in thing_props_list:
+            prop_soup = BeautifulSoup(str(prop), "lxml")
+            try:
+                prop_str += prop_soup.div.get_text().strip() + ';'
+            except:
+                print(index, prop)
+            index += 1
+        rows_csv.append((img_str + prop_str))
+    return rows_csv

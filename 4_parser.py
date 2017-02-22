@@ -4,6 +4,7 @@ import codecs
 
 from parser_01s.utils import read_config
 from parser_01s.mod_parse import parse_shilco_sport_v2
+from parser_01s.mod_parse import parse_kotmarkot
 
 config_parse = {}
 # read data project
@@ -15,7 +16,7 @@ url_site = config_parse['url_site']
 path_input_file = (
     path_output + 'html_' + name_html + '_' + str(num_file_parse) + '.parse')
 
-rows_csv = []  # end data in csv file
+rows_csv = [] # end data in csv file
 path_output_file = path_input_file[:-6] + '.csv'  # name file csv
 
 # read source code html for pages
@@ -27,7 +28,7 @@ with open(path_output_file, 'w') as output_file:
     output_file.write(
         'артикул;наименование;описание;цена;размер;img;img;img;img;img;img;img;img;img;img\n')
     #get rows csv from function-parser
-    rows_csv = parse_shilco_sport_v2(sources_html_list, url_site)
+    rows_csv = parse_kotmarkot(sources_html_list)
     for row in rows_csv:
         output_file.write(row + '\n')
 
