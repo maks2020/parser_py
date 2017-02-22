@@ -22,7 +22,7 @@ url_login = config_parse['url_login']
 num_file_parse = 1
 start_index = 0
 
-# define path for the source from the site
+# define path for the source get from the site
 path_output_file = (path_output + 'html_' +
                     name_html + '_' + str(num_file_parse) + '.parse')
 
