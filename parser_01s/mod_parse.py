@@ -102,7 +102,7 @@ def parse_shilco_sport_v2(sources_html_list, url_site):
     rows_csv = []
     for source in sources_html_list:
         thing_data_list = []  # define list for data things
-        #clear source from "; \n"
+        # clear source from "; \n"
         source_ed = source.replace(';', '').replace('\n', '')
         soup = BeautifulSoup(source_ed, "lxml")
         # soup = BeautifulSoup(sources_html_list[10].replace(';', ''), "lxml")
@@ -165,7 +165,7 @@ def parse_shilco_sport_v2(sources_html_list, url_site):
                     data_thing_for_color = dict(
                         zip(keys_list_temp, values_list_temp))
                     thing_data_list.append(data_thing_for_color)
-        #create dictionary item "color: size/height"
+        # create dictionary item "color: size/height"
         thing_color_dict = {}
         for item in thing_data_list[1:]:
             thing_color_dict[item['0']] = ''
@@ -183,7 +183,7 @@ def parse_shilco_sport_v2(sources_html_list, url_site):
         sizes_list.sort(reverse=True)
         as_list = soup.select("a[data-zoom-image]")
         imgs_url_list = []
-        #create list and string url images for .csv
+        # create list and string url images for .csv
         for item in as_list:
             imgs_url_list.append(url_site + item.get('data-zoom-image'))
         thing_data_list.append(imgs_url_list)  # add images in list data thing
@@ -191,7 +191,7 @@ def parse_shilco_sport_v2(sources_html_list, url_site):
         imgs_urls = ''
         for img_url in thing_data_list[-1]:
             imgs_urls += img_url + ';'
-        #create row csv on sizes
+        # create row csv on sizes
         for size_thing in sizes_list:
             row_csv = (thing_data_list[0]['part_number'] + ' ' +
                        thing_data_list[0]['name_thing'] + ' ' + ';' +
@@ -203,9 +203,10 @@ def parse_shilco_sport_v2(sources_html_list, url_site):
                        thing_data_list[0]['price_thing'] + ';' +
                        # sizes_str[:-1] + ';' + imgs_urls)
                        size_thing + ';' + imgs_urls)
-            #filling list rows_csv rows csv
+            # filling list rows_csv rows csv
             rows_csv.append(row_csv)
     return rows_csv
+
 
 def parse_kotmarkot(sources_html_list):
     rows_csv = []
@@ -236,16 +237,17 @@ def parse_kotmarkot(sources_html_list):
         except:
             ...
         try:
-            thing_props = BeautifulSoup(str(thing_props_list[-1]), "lxml").get_text()
+            thing_props = BeautifulSoup(
+                str(thing_props_list[-1]), "lxml").get_text()
             if not (re.match(r'[0-9]+', thing_props)):
-                thing_props_list.insert(9, str(thing_props_list.pop()).strip()) 
+                thing_props_list.insert(9, str(thing_props_list.pop()).strip())
         except:
             ...
         size_thing_list = []
         for size in thing_props_list[10:]:
             size_soup = BeautifulSoup(str(size), 'lxml')
             size_thing_list.append(size_soup.div.get_text())
-        size_thing ='<div>' + ','.join(size_thing_list) + '</div>'
+        size_thing = '<div>' + ','.join(size_thing_list) + '</div>'
         thing_props_list[10:] = ''
         thing_props_list.append(size_thing)
         prop_str = ''
@@ -258,4 +260,50 @@ def parse_kotmarkot(sources_html_list):
                 print(index, prop)
             index += 1
         rows_csv.append((img_str + prop_str))
+    return rows_csv
+
+
+def parse_agat_77(sources_html_list)
+    rows_csv = []
+    for source in sources_html_list:
+        soup = BeautifulSoup(source, "lxml")
+        div_src_img = soup.find(
+            class_={'d-item-gallery', 'info-block-content'})
+        div_src_img = soup.find(
+            class_={'d-item-gallery', 'info-block-content'})
+        if div_src_img:
+            link_img001_main = url_site + \
+                str(div_src_img.contents[1]['href'])
+        else:
+            link_img001_main = ''
+        if div_src_img and len(div_src_img.contents) >= 4:
+            link_img002_second = url_site + \
+                str(div_src_img.contents[3].a['href'])
+        else:
+            link_img002_second = ''
+        if soup.find(class_={'d-item-descr'}):
+            desc_busy = soup.find(
+                class_={'d-item-descr'}).get_text(separator=u" ", strip=True)
+        else:
+            desc_busy = ''
+        if soup.find(class_={'d-item-text'}):
+            descr_material = soup.find(
+                class_={'d-item-text'}).get_text(separator=u" ", strip=True)
+        else:
+            descr_material = ''
+        desc_product = '%s %s' % (desc_busy, descr_material)
+        if soup.find('h1'):
+            name_product = soup.find('h1').get_text(
+                separator=u" ", strip=True) + '.'
+        else:
+            name_product = 'None'
+        if soup.find(class_={'d-item-price'}):
+            desc_price = soup.find(
+                class_={'d-item-price'}).get_text(separator=u" ", strip=True)
+        else:
+            desc_price = 'None'
+        row_in_csv = '%s;%s;%s;%s;%s;%s;%s;' % (
+            name_product, name_product, desc_product, desc_price, '', link_img001_main, link_img002_second)
+        # print(row_in_csv)
+        rows_csv.append(row_in_csv)
     return rows_csv
