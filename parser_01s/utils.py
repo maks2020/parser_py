@@ -6,18 +6,18 @@ import pickle
 import getpass
 
 
-def get_html_make_file(urls_list, file_name, index_item=0):
+def get_html_wout_login(urls_list, file_name, index_item=0):
     """get html code from source and make output file"""
     # path_geckodriver='/Users/mas/Desktop/my_python/py3x/parser01/env/bin'
     with open(file_name, 'w') as output_file:
         count = 1
         slice_urls_list = urls_list[index_item:]
         buffer_list = []
+        PHANTOMJS_PATH = './phantomjs'
+        # browser = webdriver.Firefox(path_geckodriver)
+        browser = webdriver.PhantomJS(PHANTOMJS_PATH)
         for url_full in slice_urls_list:
             print(str(index_item + 1), ' ', url_full.rstrip())
-            PHANTOMJS_PATH = './phantomjs'
-            # browser = webdriver.Firefox(path_geckodriver)
-            browser = webdriver.PhantomJS(PHANTOMJS_PATH)
             browser.get(url_full)
             buffer_list.append(browser.page_source)
             if count == 10:

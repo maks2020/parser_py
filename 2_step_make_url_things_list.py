@@ -8,7 +8,8 @@ def make_url_things_list(sources_html):
     soup = BeautifulSoup(sources_html, "lxml")
     # things_list = soup.find_all('a', class_='catalog-list-title')
     #things_list = soup.select('.images a') - kotmarkot
-    things_list = soup.select('.section_good_image a')
+    # things_list = soup.select('.section_good_image a') #for shilco sport
+    things_list = soup.select('.images a') # for kotmarkot
     url_things_list = []
     for thing in things_list:
         if (url_site + thing.get('href')) not in url_things_list:

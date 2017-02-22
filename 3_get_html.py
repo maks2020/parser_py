@@ -8,6 +8,7 @@ from selenium import webdriver
 from parser_01s.utils import get_html_with_login
 from parser_01s.utils import read_file_in_list
 from parser_01s.utils import read_config
+from parser_01s.utils import get_html_wout_login
 
 # read config from directory of parse
 config_parse = {}
@@ -26,5 +27,4 @@ start_index = 0
 path_output_file = (path_output + 'html_' +
                     name_html + '_' + str(num_file_parse) + '.parse')
 
-get_html_with_login(read_file_in_list(path_html_url), path_output_file,
-                    url_login, start_index)
+get_html_wout_login(read_file_in_list(path_html_url), path_output_file, start_index)
