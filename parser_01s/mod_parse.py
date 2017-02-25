@@ -3,6 +3,19 @@
 import re
 from bs4 import BeautifulSoup
 
+def filling_str(string, len_str = 110):
+    """filling string on full"""
+    leght_str = len(string)
+    if leght_str <= len_str:
+        add_symb = len_str - len(string)
+        add_str = '..' * add_symb
+    else:
+        while leght_str > len_str:
+            leght_str = abs(leght_str - len_str)
+        add_symb = len_str - leght_str
+        add_str = '..' * add_symb
+    return add_str
+
 
 def parse_shilco_sport_v1(sources_html_list, url_site):
     """parser models for site shilco.ru"""
@@ -173,8 +186,9 @@ def parse_shilco_sport_v2(sources_html_list, url_site):
             thing_color_dict[item['0']] += item['1'] + '/' + item['2'] + ', '
         thing_color_size_height = ''
         for key in thing_color_dict:
-            thing_color_size_height += (key + ': ' +
-                                        thing_color_dict[key][:-2]) + '. '
+            color_str = (key + ': ' + thing_color_dict[key][:-2] + '. ')
+            thing_color_size_height += (key + ': ' + (filling_str(color_str)) +
+                                        thing_color_dict[key][:-2] + '. ')
         # create sizes list
         thing_sizes = {}
         for item in thing_data_list[1:]:
@@ -197,9 +211,11 @@ def parse_shilco_sport_v2(sources_html_list, url_site):
                        thing_data_list[0]['name_thing'] + ' ' + ';' +
                        thing_data_list[0]['part_number'] + ' ' +
                        thing_data_list[0]['name_thing'] + ' ' + ';' +
-                       thing_data_list[0]['description'] + ' ' +
-                       'Цвета, размер и рост доступные к заказу: ' +
-                       thing_color_size_height[:-1] + ';' +
+                       # thing_data_list[0]['description'] + ' ' +
+                       thing_data_list[0]['description'] + filling_str(thing_data_list[0]['description']) + '. ' +
+                       'Цвета, размер и рост доступные к заказу: ' + filling_str('Цвета, размер и рост доступные к заказу: ' + '. ') + '. ' +
+                       #thing_color_size_height[:-1] + ';' +
+                       thing_color_size_height + ';' +
                        thing_data_list[0]['price_thing'] + ';' +
                        # sizes_str[:-1] + ';' + imgs_urls)
                        size_thing + ';' + imgs_urls)
@@ -263,7 +279,7 @@ def parse_kotmarkot(sources_html_list):
     return rows_csv
 
 
-def parse_agat_77(sources_html_list)
+def parse_agat_77(sources_html_list):
     rows_csv = []
     for source in sources_html_list:
         soup = BeautifulSoup(source, "lxml")
