@@ -28,7 +28,7 @@ with open(path_output_file, 'w') as output_file:
     output_file.write(
         'артикул;наименование;описание;цена;размер;img;img;img;img;img;img;img;img;img;img\n')
     #get rows csv from function-parser
-    rows_csv = parse_kotmarkot(sources_html_list)
+    rows_csv = parse_shilco_sport_v2(sources_html_list, url_site)
     for row in rows_csv:
         output_file.write(row + '\n')
 
