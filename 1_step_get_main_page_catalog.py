@@ -15,7 +15,6 @@ def url_list_make(url_first, url_last_elem01, url_last_elem02, num_pages):
     """make list of url catalog pages"""
     urls_list = ['%s%s%s%s' % (url_first, url_last_elem01, str(num_page), url_last_elem02)
                  for num_page in range(1, int(num_pages))]
-    # urls_list.append('http://kotmarkot.ru/catalog/20')
     return urls_list
 
 
@@ -68,8 +67,7 @@ def project_base(name_project):
         # input data for parse
         config_parse['name_html'] = name_project
         config_parse['url_site'] = input(
-            "Input url site aka http://example.com: ")  # http://www.shilco.ru
-        # http://www.shilco.ru/catalog/dlya_zhenshchin/
+            "Input url site aka http://example.com: ")
         config_parse['url_first'] = input(
             'Input url first page catalog aka http://example.com/catalog/: ')
         config_parse['url_last_elem01'] = input(
